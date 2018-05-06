@@ -1,9 +1,9 @@
 # Testowanie aplikacji JAVA 2017-2018
 ## Projekt 2 (Maven, JUnit oraz atrapy)
 
-| Travis CI Status | Maintainability |
-:--:|:--:
-[![Build Status](https://travis-ci.com/TestowanieJAVA2017-2018Gr2/projekt2-JakubBalcerowicz.svg?token=qXd72fwPxWfza7KMHCDM&branch=master)](https://travis-ci.com/TestowanieJAVA2017-2018Gr2/projekt2-JakubBalcerowicz) | [![Maintainability](https://api.codeclimate.com/v1/badges/ec7759a9d5401cdcd24e/maintainability)](https://codeclimate.com/repos/5aeca74adacac35f5c00b6a6/maintainability)
+| Travis CI Status | Maintainability | BetterCodeHub
+:--:|:--:|:--:
+[![Build Status](https://travis-ci.com/TestowanieJAVA2017-2018Gr2/projekt2-JakubBalcerowicz.svg?token=qXd72fwPxWfza7KMHCDM&branch=master)](https://travis-ci.com/TestowanieJAVA2017-2018Gr2/projekt2-JakubBalcerowicz) | [![Maintainability](https://api.codeclimate.com/v1/badges/ec7759a9d5401cdcd24e/maintainability)](https://codeclimate.com/repos/5aeca74adacac35f5c00b6a6/maintainability) | [![BCH compliance](https://bettercodehub.com/edge/badge/JakubBalcerowicz/projekt2java?branch=master)](https://bettercodehub.com/)
 -----------------------
 ### REGUŁY GRY
 
