@@ -1,0 +1,476 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CPM
+{ 
+    public class Graph : IEnumerable
+    {
+        private int vertices;
+        private List<Int32>[] adj;
+         int[] top = new int[5];
+
+        public Graph(int v)
+        {
+            vertices = v;
+            adj = new List<Int32>[v];
+            for(int i =0; i< v; ++i)
+            {
+                adj[i] = new List<int>();
+            }
+        }
+        public void addedge(int c,int v)
+        {
+            adj[c].Add(v);
+        }
+
+       public void topologicalSortUtil(int v, bool[] visited,Stack<Int32> stack)
+        {
+            // Mark the current node as visited.
+            visited[v] = true;
+
+            // Recur for all the vertices adjacent to this
+            // vertex
+
+            IEnumerator <Int32> it = adj[v].GetEnumerator();
+                while (it.MoveNext())
+                {
+
+                int i = it.Current;
+                    if (!visited[i])
+                        topologicalSortUtil(i, visited, stack);
+                }
+            
+
+            // Push current vertex to stack which stores result
+            stack.Push(v);
+        }
+       public int[] topologicalSort()
+        {
+             int[] top = new int[vertices];
+            Stack<Int32> stack = new Stack<int>();
+
+            // Mark all the vertices as not visited
+            bool[] visited = new bool[vertices];
+            for (int i = 0; i < vertices; i++)
+                visited[i] = false;
+
+            // Call the recursive helper function to store
+            // Topological Sort starting from all vertices
+            // one by one
+            for (int i = 0; i < vertices; i++)
+                if (visited[i] == false)
+                {
+                    topologicalSortUtil(i, visited, stack);
+                }
+            Console.WriteLine("Topology order by index");
+            // Print contents of stack
+            for(int i = 0; i < vertices - 1; i++)
+            {
+                top[i] = stack.Pop();
+                Console.Write(top[i] + " ");
+            }
+            Console.WriteLine("");
+            return top;
+        }
+
+        public void DFS(int v)
+        {
+            bool[] visited = new bool[vertices];
+            Stack<Int32> stack = new Stack<int>();
+            visited[v] = true;
+            stack.Push(v);
+            Console.WriteLine(stack.Count);
+
+            while (stack.Count != 0)
+            {
+                v = stack.Pop();
+                Console.WriteLine(stack.Count);
+                Console.WriteLine("next->" + v);
+                foreach(int i in adj[v])
+                {
+                    if (!visited[i])
+                    {
+                        visited[i] = true;
+                        stack.Push(i);
+                    }
+                }
+            }
+
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return adj.GetEnumerator();
+        }
+    }
+    class Program
+    {
+        static int time = 0;
+        static ArrayList tasks = new ArrayList();
+        static ArrayList tasksId = new ArrayList();
+        static void Main(string[] args)
+        {
+
+
+
+             //test1();
+           example();
+        }
+
+        static void example()
+        {
+
+
+            Task task1 = new Task(1, 2, new ArrayList { }, new ArrayList {2});
+            Task task2 = new Task(2, 3, new ArrayList { 1 }, new ArrayList {3,4 });
+            Task task3 = new Task(3, 1, new ArrayList { 2 }, new ArrayList {6,7,8 });
+            Task task4 = new Task(4, 4, new ArrayList { 2 }, new ArrayList {5,8});
+            Task task5 = new Task(5, 2, new ArrayList { 4 }, new ArrayList { 8 });
+            Task task6 = new Task(6, 3, new ArrayList { 3 }, new ArrayList {  });
+            Task task7 = new Task(7, 3, new ArrayList { 3 }, new ArrayList { });
+            Task task8 = new Task(8, 5, new ArrayList { 3,4,5 }, new ArrayList { });
+
+
+            Graph graph = new Graph(9);
+            graph.addedge(1, 2);
+            graph.addedge(2, 4);
+            graph.addedge(2, 3);
+            graph.addedge(3, 6);
+            graph.addedge(3, 7);
+            graph.addedge(3, 8);
+            graph.addedge(4, 5);
+            graph.addedge(5, 8);
+            graph.addedge(4, 8);
+ 
+            tasks.Add(task1);
+            tasks.Add(task2);
+            tasks.Add(task3);
+     
+            tasks.Add(task4);
+            tasks.Add(task5);
+            tasks.Add(task6);
+            tasks.Add(task7);
+            tasks.Add(task8);
+
+            Console.WriteLine(graph.topologicalSort());
+            SetTopology(graph.topologicalSort());
+            
+
+            Check();
+
+            Print();
+
+
+            SetEarlyTime();
+            Console.WriteLine("czas 1  " + task1.GetEarlyTime());
+            Console.WriteLine("czas 2  " + task2.GetEarlyTime());
+            Console.WriteLine("czas 3  " + task3.GetEarlyTime());
+
+            Console.WriteLine("czas 4  " + task4.GetEarlyTime());
+            Console.WriteLine("czas 5  " + task5.GetEarlyTime());
+            Console.WriteLine("czas 6  " + task6.GetEarlyTime());
+            Console.WriteLine("czas 7  " + task7.GetEarlyTime());
+            Console.WriteLine("czas 8  " + task8.GetEarlyTime());
+
+            SetLatestStartTime();
+            //PrintCP(task1);
+
+
+            printCriticalPath();
+
+            Console.WriteLine("");
+
+            Console.WriteLine("late 1  " + task1.GetLateTime());
+            Console.WriteLine("late 2  " + task2.GetLateTime());
+            Console.WriteLine("late 3  " + task3.GetLateTime());
+            Console.WriteLine("late 4  " + task4.GetLateTime());
+            Console.WriteLine("late 5  " + task5.GetLateTime());
+            Console.WriteLine("late 6  " + task6.GetLateTime());
+            Console.WriteLine("late 7  " + task7.GetLateTime());
+            Console.WriteLine("late 8  " + task8.GetLateTime());
+
+
+
+        }
+
+        static void test1()
+        {
+
+            Task task1 = new Task(1, 2, new ArrayList { }, new ArrayList { 3 });
+            Task task2 = new Task(3, 4, new ArrayList { 1 }, new ArrayList { 2 });
+            Task task3 = new Task(2, 1, new ArrayList { 3 }, new ArrayList { });
+
+            Graph graph = new Graph(4);
+            graph.addedge(1, 3);
+            graph.addedge(3, 2);
+
+
+            tasks.Add(task1);
+            tasks.Add(task2);
+            tasks.Add(task3);
+
+            SetTopology(graph.topologicalSort());
+
+            Check();
+
+            Print();
+
+            SetEarlyTime();
+            Console.WriteLine("czas 1  " + task1.GetEarlyTime());
+            Console.WriteLine("czas 2  " + task2.GetEarlyTime());
+            Console.WriteLine("czas 3  " + task3.GetEarlyTime());
+
+            SetLatestStartTime();
+
+            printCriticalPath();
+            Console.WriteLine("");
+
+            Console.WriteLine("late 1  " + task1.GetLateTime());
+            Console.WriteLine("late 2  " + task2.GetLateTime());
+            Console.WriteLine("late 3  " + task3.GetLateTime());
+
+
+        }
+
+        public static void Check()
+        {
+            foreach (Task task in tasks)
+            {
+
+                int[] array = task.GetSuccessors().ToArray(typeof(int)) as int[];
+                foreach(int a in array)
+                {
+                    if(task.GetTopology() > GetTaskById(a).GetTopology())
+                    {
+                        Console.WriteLine("Petla zadanie: " + task.GetId() + " zapetlone z zadaniem: " + a);
+                    }
+                }
+
+                
+
+            }
+        }
+
+        public static void SetTopology(int [] top)
+        {
+            int z = 0;
+
+            foreach(Task task in tasks)
+            {
+                for(int i=0; i < 8; i++)
+                {
+                    if(top[i] == task.GetId())
+                    {
+                        task.SetTopology(i);
+                    }
+                }
+            }
+        }
+
+        public static Task FindMaxTime(Task task)
+        {
+            ArrayList times = new ArrayList();
+            ArrayList tasks = new ArrayList();
+
+            foreach (int i in task.GetSuccessors())
+            {
+                Task pre = GetTaskById(i);
+                tasks.Add(pre);
+                int newEarliestTime = pre.GetDuration();
+                times.Add(newEarliestTime);
+            }
+
+            int indexOfMaxInTimesArray = 0;
+            for (int j = 1; j < times.Count; j++)
+            {
+                if ((int)times[j] > (int)times[j - 1])
+                    indexOfMaxInTimesArray = j;
+            }
+
+            foreach(Task a in tasks)
+            {
+                
+                if (a.GetDuration() == (int)times[indexOfMaxInTimesArray])
+                    return a;
+            }
+
+             return task;
+        }
+
+        public static void printCriticalPath()
+        {
+            ArrayList tasksId = new ArrayList();
+
+            foreach(Task task in tasks)
+            {
+                if (task.GetLateTime() - task.GetEarlyTime() == 0) tasksId.Add(task.GetId());
+            }
+
+            foreach (int i in tasksId)
+            {
+                time = time + GetTaskById(i).GetDuration();
+                Console.Write(i + " ");
+            }
+            Console.WriteLine("Time: " + time);
+
+        }
+
+        public static ArrayList PrintCP(Task task)
+        {
+            
+
+            
+            tasksId.Add(task);
+            if(FindMaxTime(task).GetSuccessors().Count == 0)
+            {
+                tasksId.Add(FindMaxTime(task));
+                return tasksId;
+            }
+            return PrintCP(FindMaxTime(task));
+
+        }
+
+        public static void Print()
+        {
+            foreach(Task task in tasks)
+            {
+                Console.WriteLine(task);
+            }
+        }
+
+        public static void SetEarlyTime()
+        {
+            foreach (Task task in tasks)
+            {
+                if (task.GetPredecessors().Count == 0) task.SetEarlyTime(0);
+                else if (task.GetPredecessors().Count == 1)
+                {
+
+                    int[] array = task.GetPredecessors().ToArray(typeof(int)) as int[];
+                    task.SetEarlyTime(GetTaskById(array[0]).GetEarlyTime() + GetTaskById(array[0]).GetDuration());
+                    
+                }
+                else if (task.GetPredecessors().Count > 1)
+                {
+                    task.SetEarlyTime(FindMaxEarliestStartTime(task));
+                }
+            }
+        }
+
+        public static void SetLatestStartTime()
+        {
+            
+            for (int i = tasks.Count-1; i > 0; i--)
+            {
+
+                if (GetTaskByTopology(i).GetSuccessors().Count == 0)
+                {
+                    GetTaskByTopology(i).SetLateTime(findLatestTask().GetEarlyTime() + findLatestTask().GetDuration() - GetTaskByTopology(i).GetDuration());
+                    
+                }
+                else if (GetTaskByTopology(i).GetSuccessors().Count == 1)
+                {
+                    int[] array = GetTaskByTopology(i).GetSuccessors().ToArray(typeof(int)) as int[];
+                    GetTaskByTopology(i).SetLateTime((GetTaskById(array[0]).GetLateTime()) - GetTaskByTopology(i).GetDuration());
+
+                }
+                else if (GetTaskByTopology(i).GetSuccessors().Count > 1)
+                {
+                    GetTaskByTopology(i).SetLateTime(FindMinLatestStartTime(GetTaskByTopology(i)));
+                }
+            }
+        }
+
+        public static Task findLatestTask()
+        {
+            Task latest = GetTaskByTopology(tasks.Count-1);
+
+            for (int i = tasks.Count - 1; i > 0; i--)
+            {
+                if (latest.GetEarlyTime() < GetTaskById(i).GetEarlyTime())
+                {
+                    latest = GetTaskById(i);
+                }
+            }
+
+            return latest;
+        }
+
+        public static int FindMinLatestStartTime(Task task)
+        {
+            ArrayList times = new ArrayList();
+
+            foreach (int i in task.GetSuccessors())
+            {
+                Task su = GetTaskById(i);
+                int newLatestTme = su.GetLateTime() - task.GetDuration();
+                times.Add(newLatestTme);
+            }
+
+            int indexOfMinInTimesArray = 0;
+            for (int j = 1; j < times.Count; j++)
+            {
+                if ((int)times[j] < (int)times[j - 1])
+                    indexOfMinInTimesArray = j;
+            }
+
+            return (int)times[indexOfMinInTimesArray];
+        }
+
+        public static int FindMaxEarliestStartTime(Task task)
+        {
+            ArrayList times = new ArrayList();
+
+            foreach (int i in task.GetPredecessors())
+            {
+                Task pre = GetTaskById(i);
+                int newEarliestTime = pre.GetEarlyTime() + pre.GetDuration();
+                times.Add(newEarliestTime);
+            }
+
+            int indexOfMaxInTimesArray = 0;
+            for (int j = 1; j < times.Count; j++)
+            {
+                if ((int)times[j] > (int)times[j-1])
+                    indexOfMaxInTimesArray = j;
+            }
+
+            return (int)times[indexOfMaxInTimesArray];
+        }
+
+
+
+            public static Task GetTaskById(int id)
+        {
+            foreach (Task task in tasks)
+            {
+                if (task.GetId() == id)
+                {
+                    return task;
+                }
+            }
+            return null;
+        }
+
+        public static Task GetTaskByTopology(int id)
+        {
+            foreach (Task task in tasks)
+            {
+                if (task.GetTopology() == id)
+                {
+                    return task;
+                }
+            }
+            return null;
+        }
+
+
+
+    }
+
+
+}
