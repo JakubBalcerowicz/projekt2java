@@ -56,3 +56,7 @@ punktacji zadania!)
 - Historia projektu w repozytorium.
 - Różnorodne asercje (co najmniej 5 różnych).
 - Struktura projektu.
+
+
+
+link do repozytorium https://www.lestard.eu/2015/05/25/generic_repository_part1.html
